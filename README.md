@@ -48,7 +48,7 @@ npm start
 ### Optional Deployment to Vercel
 
 1. Import your Git repository into [Vercel](https://vercel.com/new).
-2. Set the **Root Directory** to `teach-me-candidate`.
+2. Set the **Root Directory** to `./`.
 3. Use the automatically detected **Next.js** framework preset and default build settings.
 4. Deploy.
 
