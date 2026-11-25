@@ -1,0 +1,71 @@
+@layer components {
+  .throw-quiz-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--lesson-gap);
+  }
+  .throw-quiz-controls .ui-geometry-input { max-inline-size: 21rem; }
+  .throw-timing { display: grid; min-inline-size: 0; gap: var(--spacing); }
+  .throw-frame-range { position: relative; display: flex; }
+  .throw-frame-range .ui-range { min-inline-size: 0; }
+  .throw-frame-stops {
+    position: absolute;
+    inset: calc(50% + 5px) .5rem auto;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .throw-frame-stops i { inline-size: 1px; block-size: 4px; background: var(--color-control-edge); }
+  /* The same tracks hold both tasks. The caption measures every possible reading
+     at the available width, including when text is enlarged. */
+  .throw-timing [role='status'] { display: grid; }
+  .throw-timing .ui-stable-label { place-items: start; }
+  .throw-preview-space { visibility: hidden; }
+  .throw-actions { display: flex; align-items: center; gap: var(--spacing); }
+  @container lesson-controls (max-width: 35rem) {
+    .throw-actions { flex-direction: column; align-items: stretch; }
+    .throw-actions .ui-button { padding-inline: calc(2 * var(--spacing)); }
+  }
+  @media (min-width: 30.01rem) and (max-height: 30.99rem) {
+    .throw-actions { flex-direction: row; }
+    .throw-timing { grid-template-columns: auto minmax(4rem, 1fr); align-items: center; }
+    .throw-timing [role='status'] { grid-column: 1 / -1; }
+  }
+  @media (max-width: 30rem) and (max-height: 30.99rem) {
+    .lesson-workspace[data-guided]:has(.throw-quiz-controls, .lesson-choice-quiz) {
+      grid-template: 'stage note' minmax(0, 1fr) 'controls controls' auto / minmax(0, 1fr) 54%;
+    }
+    .lesson-workspace:has(.throw-quiz-controls, .lesson-choice-quiz) .lesson-guidance { grid-area: note; }
+    .lesson-workspace:has(.throw-quiz-controls, .lesson-choice-quiz) .ui-stage-note[data-open='true'] { inset-block: 0 auto; }
+    .lesson-workspace:has(.throw-quiz-controls, .lesson-choice-quiz) .lesson-guidance .ui-note-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .lesson-workspace:has(.throw-quiz-controls, .lesson-choice-quiz) .ui-note-body { grid-area: 2 / 1 / auto / -1; }
+  }
+  .lesson-choice-quiz {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--lesson-gap);
+  }
+  .lesson-choice-quiz .ui-cluster { gap: var(--spacing); }
+  .lesson-choice-quiz .ui-choice { padding-inline: var(--spacing); }
+  @container lesson-controls (max-width: 26rem) {
+    .lesson-choice-quiz {
+      grid-template-columns: minmax(0, 1fr);
+      position: relative;
+    }
+    .lesson-choice-quiz .ui-group > legend {
+      padding-inline-end: 8.5rem;
+      /* Leave room for the longer catch question beside the action. */
+      min-block-size: max(var(--spacing-hit), 3lh);
+    }
+    .lesson-choice-quiz > .ui-button {
+      position: absolute;
+      inset-inline-end: 0;
+      inset-block-start: 0;
+      padding-inline: calc(2 * var(--spacing));
+    }
+  }
+}

@@ -1,0 +1,346 @@
+@import "tailwindcss" source("../");
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans-bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Share the same tokens between Tailwind utilities and the sprite scene. */
+@theme static {
+  --color-page: #101927;
+  --color-stage: #172335;
+  --color-panel: #243249;
+  --color-coral: #ff785f;
+  --color-turquoise: #60dfda;
+  --color-amber: #ffd166;
+  --color-success: var(--color-turquoise);
+  --color-error: var(--color-coral);
+  --color-ink: #0d1521;
+  --color-white: #ffffff;
+  --color-muted: #bdcad8;
+  --color-stitch: #fff5df;
+  --color-control: #303942;
+  --color-control-hover: #526376;
+  --color-control-pressed: #c0cdda;
+  --color-control-edge: #85929f;
+  --color-interaction-edge: #e1e9ef;
+  --color-focus: var(--color-amber);
+  --color-focus-keyline: var(--color-ink);
+  --outline-width-focus: 3px;
+  --outline-offset-focus: 3px;
+  --color-action: #f2f1ed;
+  --color-divider: #435165;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --spacing: 0.25rem;
+  --radius-control: 0.375rem;
+  --radius-surface: 0.75rem;
+  --text-sprite-caption: 7px; /* SVG user space, scaled with the teaching scene. */
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-caption--font-weight: 400;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.35;
+  --text-label--font-weight: 700;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-body--font-weight: 400;
+  --text-subheading: 1rem;
+  --text-subheading--line-height: 1.35;
+  --text-subheading--font-weight: 700;
+  --text-subtitle: 1.25rem;
+  --text-subtitle--line-height: 1.25;
+  --text-subtitle--font-weight: 700;
+  --text-subtitle--letter-spacing: -0.015em;
+  --text-title: clamp(1.625rem, 3vw, 2.25rem);
+  --text-title--line-height: 1.12;
+  --text-title--font-weight: 700;
+  --text-title--letter-spacing: -0.025em;
+  --text-display: clamp(2.1rem, 4.8vw, 4.25rem);
+  --text-display--line-height: 1.03;
+  --text-display--letter-spacing: -0.045em;
+  --spacing-hit: 2.75rem;
+  --spacing-gutter: clamp(1rem, 3vw, 2rem);
+  --ease-control: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --duration-control: 140ms;
+  --duration-feedback: 240ms;
+  --duration-attention: 1600ms;
+}
+
+@layer base {
+  :root { color-scheme: dark; }
+  body { @apply m-0 bg-page font-sans text-body text-white antialiased; }
+  :where(button, input, select) { font: inherit; }
+  :where(fieldset, legend) { min-inline-size: 0; }
+  :where(h1, h2, h3, h4, h5, h6) { text-wrap: balance; }
+  h1 { @apply text-title; }
+  h2 { @apply text-subtitle; }
+  @media (max-width: 26rem), (max-width: 30rem) and (max-height: 31rem) {
+    h1 { @apply text-subtitle; }
+  }
+  @media (max-width: 52rem), (max-height: 31rem) {
+    h2 { @apply text-subheading; }
+  }
+  h3, h4, h5, h6 { @apply text-subheading; }
+  p { @apply text-body; }
+  :where(label, legend) { @apply text-label; }
+  :where(small, figcaption) { @apply text-caption text-muted; }
+  :where(button:not(:disabled), select, input[type="checkbox"], input[type="range"]) { cursor: pointer; }
+}
+
+@layer components {
+  .ui-stack { @apply flex min-w-0 flex-col gap-4; }
+  .ui-reading { @apply grid min-w-0 content-start justify-items-start gap-3; overflow-wrap: anywhere; }
+  .ui-course-logo { @apply inline-flex min-h-hit min-w-hit items-center justify-center gap-1 rounded-control px-1 text-label text-white; }
+  .ui-course-logo:hover { @apply bg-panel; }
+  .ui-cluster { @apply flex min-w-0 flex-wrap items-center gap-2; }
+  .ui-surface { @apply min-w-0 rounded-surface bg-stage p-gutter; }
+  .ui-heading { @apply m-0; }
+  .ui-text { @apply m-0 text-body; max-inline-size: 65ch; }
+  .ui-caption { @apply text-caption text-muted; }
+  .ui-label, .ui-button { @apply text-label; }
+  .ui-text-field { @apply grid min-w-0 gap-2; }
+  .ui-text-field input { @apply min-h-hit w-full rounded-control border border-control-edge bg-page px-3 text-body text-white; }
+  .ui-note-body, .ui-feedback-copy { overflow-wrap: anywhere; }
+  .ui-muted { @apply text-muted; }
+  .ui-button {
+    @apply inline-flex min-h-hit min-w-hit shrink-0 items-center justify-center gap-2 rounded-control border border-control-edge bg-control px-4 py-2 text-center text-white;
+    transition: box-shadow var(--duration-control) var(--ease-control);
+    touch-action: manipulation;
+  }
+  .ui-button[data-variant="primary"] { @apply border-transparent bg-action text-ink; }
+  .ui-button[data-variant="quiet"] { @apply border-transparent bg-transparent; }
+  .ui-button:disabled { @apply cursor-not-allowed opacity-45; }
+  .ui-button[aria-disabled="true"] { @apply cursor-not-allowed border-divider bg-panel text-muted; }
+  .ui-hint-anchor { display: inline-flex; }
+  .ui-action-hint {
+    @apply fixed m-0 rounded-control border border-divider bg-panel p-2 text-sm text-white shadow-lg;
+    inset: auto;
+    max-inline-size: min(15rem, calc(100vw - 1rem));
+  }
+  .ui-button[aria-pressed="true"] { @apply border-control-edge bg-control; }
+  .ui-button.ui-attention:not(:hover, :focus-visible, :active) { animation: ui-attention var(--duration-attention) ease-in-out infinite; }
+  .ui-stable-label { display: inline-grid; place-items: center; }
+  .ui-stable-label > span { grid-area: 1 / 1; }
+  .ui-stable-label > [data-reserve] { visibility: hidden; }
+  .ui-stable-label > [data-reserve]::before { content: attr(data-reserve); }
+
+  .ui-group { @apply m-0 min-w-0 border-0 p-0; }
+  .ui-group > legend { @apply mb-2 p-0; }
+  .ui-geometry { @apply flex flex-wrap items-end gap-x-6 gap-y-4; }
+  .ui-geometry .ui-button { @apply min-w-20; }
+  .ui-geometry-input {
+    container: geometry-input / inline-size;
+    display: flex;
+    align-items: center;
+    min-block-size: var(--spacing-hit);
+    min-inline-size: 0;
+  }
+  .ui-geometry-input .ui-geometry { flex-wrap: nowrap; gap: var(--spacing); }
+  .ui-geometry-input .ui-group > legend { @apply sr-only; }
+  .ui-geometry-input .ui-cluster { flex-wrap: nowrap; gap: 1px; }
+  @container geometry-input (max-width: 36rem) {
+    .ui-geometry-input[data-buttons='true'] > .ui-checkbox { min-inline-size: var(--spacing-hit); }
+    .ui-geometry-input[data-buttons='true'] > .ui-checkbox span { @apply sr-only; }
+    .ui-geometry-input .ui-arrow-label { display: none; }
+    .ui-geometry-input .ui-button { min-inline-size: var(--spacing-hit); padding-inline: var(--spacing); }
+  }
+  .ui-choice { @apply inline-flex min-h-hit w-fit cursor-pointer items-center gap-2 rounded-control px-2; }
+  .ui-choice input { @apply size-4 accent-action; }
+  .ui-view-switch { @apply inline-flex w-fit flex-wrap gap-1; }
+  .ui-view-switch .ui-button { @apply relative px-3 text-muted; }
+  .ui-view-switch .ui-button[aria-pressed="true"] { @apply bg-transparent text-white; }
+  .ui-view-switch .ui-button[aria-pressed="true"]::after {
+    content: ""; position: absolute; bottom: 2px; inset-inline: 12px; height: 2px; background: currentColor;
+  }
+  .ui-transport { @apply flex min-w-0 items-center gap-1; }
+  .ui-transport .ui-button { @apply px-2; }
+  /* Measure the travel of the thumb center, from half a thumb inside each edge. */
+  .ui-scrubber { @apply mx-2 flex min-w-0 flex-1 cursor-pointer; touch-action: none; }
+  .ui-scrubber > .ui-range { @apply -mx-2 min-w-0; }
+  .ui-scrubber input { pointer-events: none; }
+  .ui-range { @apply inline-flex min-h-hit min-w-12 flex-1 items-center rounded-control; }
+  .ui-range input {
+    @apply h-hit w-full min-w-0 bg-transparent accent-action;
+    appearance: none;
+  }
+  .ui-range { --track: var(--color-control-edge); --thumb-ring: transparent; }
+  .ui-range input::-webkit-slider-runnable-track { @apply h-1 rounded-full; background: var(--track); }
+  .ui-range input::-moz-range-track { @apply h-1 rounded-full; background: var(--track); }
+  .ui-range input::-webkit-slider-thumb {
+    @apply size-4 rounded-full bg-action;
+    appearance: none;
+    margin-block-start: calc(var(--spacing) * -1.5);
+    box-shadow: 0 0 0 3px var(--thumb-ring);
+  }
+  .ui-range input::-moz-range-thumb { @apply size-4 rounded-full border-0 bg-action; box-shadow: 0 0 0 3px var(--thumb-ring); }
+  .ui-feedback {
+    @apply grid min-w-0 items-start gap-x-3 gap-y-4 rounded-surface border border-divider bg-stage p-4;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .ui-feedback-copy { @apply self-center gap-1; }
+  .ui-feedback > .ui-button { @apply self-center; }
+  .ui-status-mark { @apply mt-0.5 size-7 rounded-full bg-panel text-white; }
+  :is(.ui-status-mark, .ui-feedback)[data-tone="error"] { --feedback-accent: var(--color-error); }
+  :is(.ui-status-mark, .ui-feedback)[data-tone="success"] { --feedback-accent: var(--color-success); }
+  .ui-feedback:is([data-tone="error"], [data-tone="success"]) {
+    background: color-mix(in srgb, var(--feedback-accent) 16%, var(--color-page));
+    border-color: color-mix(in srgb, var(--feedback-accent) 64%, var(--color-stage));
+    box-shadow: inset 0.25rem 0 var(--feedback-accent);
+  }
+  .ui-feedback:is([data-tone="error"], [data-tone="success"]) .ui-heading { color: var(--feedback-accent); }
+  .ui-status-mark:is([data-tone="error"], [data-tone="success"]) {
+    color: var(--color-ink);
+    background: var(--feedback-accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ui-status-mark:is([data-tone="error"], [data-tone="success"]) { animation: ui-shake var(--duration-feedback) linear both; }
+    .ui-status-mark [pathLength] { stroke-dasharray: 1; animation: ui-draw var(--duration-feedback) var(--ease-control) both; }
+    .ui-status-mark [pathLength] + path { animation-delay: calc(var(--duration-feedback) * 0.375); }
+  }
+
+  .ui-dock {
+    @apply isolate relative mx-auto flex items-center;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+  }
+  .ui-dock::before {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 rounded-full border border-divider bg-panel;
+    inset-block: calc(var(--spacing) * 1.5);
+    z-index: -1;
+  }
+  .ui-dock .ui-button { @apply relative min-w-0 rounded-full p-0; inline-size: var(--spacing-hit); }
+  .ui-dock-check {
+    @apply pointer-events-none absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-success text-caption font-bold text-ink;
+    line-height: 1;
+  }
+  .ui-dock .ui-button[aria-current="step"] {
+    box-shadow: inset 0 0 0 2px var(--color-amber);
+  }
+  .ui-dock .ui-button[aria-current="step"]::after {
+    content: ""; @apply absolute bottom-1 h-1 w-3 rounded-full bg-amber;
+  }
+  .ui-dock .ui-button[data-preview] > .ui-phase-art {
+    transform: translateY(calc(-1 * var(--spacing))) scale(1.45);
+  }
+  .ui-dock-preview {
+    @apply pointer-events-none absolute z-10 flex w-max flex-col items-center;
+    inset-inline-start: var(--dock-slot);
+    inset-block-end: calc(100% + var(--spacing));
+    transform: translateX(-50%);
+  }
+  .ui-dock-caption {
+    @apply whitespace-nowrap rounded-control border border-divider bg-panel px-2 py-1;
+  }
+  .ui-phase-art {
+    @apply relative block h-6 w-8;
+    transform: scale(.74);
+    transition: transform var(--duration-control) var(--ease-control);
+  }
+  .ui-phase-art > span {
+    @apply absolute size-4;
+    background: center / contain no-repeat url("/sprites/juggling-ball.png");
+    image-rendering: pixelated;
+  }
+  .ui-phase-art > span:first-child { left: 8px; top: 4px; }
+  .ui-phase-art:has(> :nth-child(2)) > span:first-child { left: 0; top: 8px; }
+  .ui-phase-art > span:nth-child(2) { left: 16px; top: 0; }
+  .ui-phase-art > span:nth-child(3) { left: 8px; top: 8px; }
+  .ui-phase-art[data-phase="2"] > span:nth-child(2) { top: 8px; }
+  .ui-phase-art[data-phase="3"] > span:nth-child(3) { top: 3px; }
+  .ui-phase-art[data-phase="4"] > span:nth-child(2) { top: 8px; }
+  .ui-phase-art[data-phase="4"] > span:last-child { top: -2px; }
+  .ui-phase-art[data-phase="5"] > span:first-child { top: 0; }
+  .ui-phase-art[data-phase="5"] > span:last-child { top: 10px; }
+  .ui-dock-preview .ui-phase-art { display: none; }
+  @media (max-width: 40rem), (hover: none) and (pointer: coarse) {
+    .ui-dock .ui-button[data-preview] > .ui-phase-art { transform: scale(.74); }
+    .ui-dock-preview {
+      @apply gap-1 rounded-surface border border-divider bg-panel px-3 py-2;
+      inset-inline-start: 50%;
+      inset-block-end: 100%;
+    }
+    .ui-dock-preview .ui-phase-art { display: block; transform: scale(1.25); }
+    .ui-dock-preview .ui-dock-caption { @apply border-0 bg-transparent p-0; }
+  }
+  @media (max-width: 40rem) {
+    .ui-feedback { grid-template-columns: auto minmax(0,1fr); }
+    .ui-feedback > .ui-button { grid-column: 2; justify-self: start; }
+  }
+  @media (max-width: 24rem) {
+    .ui-geometry { @apply gap-y-3; }
+  }
+
+  /* A single set of interaction states for every button variant and input. */
+  @media (hover: hover) {
+    .ui-button:not(:disabled, [aria-disabled="true"]):hover,
+    .ui-choice:has(input:enabled):hover {
+      @apply border-interaction-edge bg-control-hover text-white;
+      box-shadow: inset 0 0 0 1px var(--color-interaction-edge), 0 2px 0 var(--color-ink);
+    }
+    .ui-range:hover, .ui-scrubber:hover .ui-range {
+      --track: var(--color-interaction-edge);
+      --thumb-ring: var(--color-control-hover);
+    }
+    a[href]:hover { @apply rounded-sm bg-control-hover text-white underline decoration-2; }
+  }
+  .ui-button:not(:disabled, [aria-disabled="true"]):active,
+  .ui-choice:has(input:enabled):active, a[href]:active {
+    @apply bg-control-pressed text-ink;
+    box-shadow: inset 0 0 0 2px var(--color-ink), inset 0 3px 0 var(--color-control-hover);
+    transition: none;
+  }
+  .ui-range:active, .ui-scrubber:active .ui-range {
+    --track: var(--color-white);
+    --thumb-ring: var(--color-focus);
+  }
+  :where(button, input, select, summary, a[href], [tabindex="0"]):focus-visible,
+  .ui-choice:has(input:focus-visible), .ui-range:has(input:focus-visible) {
+    outline: var(--outline-width-focus) solid var(--color-focus);
+    outline-offset: var(--outline-offset-focus);
+    box-shadow: 0 0 0 var(--outline-offset-focus) var(--color-focus-keyline);
+  }
+  :is(.ui-choice, .ui-range) input:focus-visible { outline: none; box-shadow: none; }
+  .ui-range:has(input:focus-visible) { --thumb-ring: var(--color-focus); --track: var(--color-interaction-edge); }
+  @media (forced-colors: active) {
+    .ui-button, .ui-choice { border: 1px solid ButtonText; }
+    .ui-button:is(:disabled, [aria-disabled="true"]) { border-color: GrayText; color: GrayText; opacity: 1; }
+    :where(button, input, select, summary, a[href], [tabindex="0"]):focus-visible,
+    .ui-choice:has(input:focus-visible), .ui-range:has(input:focus-visible) { outline-color: Highlight; }
+    .ui-button:not(:disabled, [aria-disabled="true"], :focus-visible):is(:hover, :active) { outline: 2px solid Highlight; }
+    .ui-range input { appearance: auto; }
+    .ui-range { --track: ButtonText; }
+  }
+}
+
+@keyframes ui-attention {
+  50% { box-shadow: 0 0 0 3px color-mix(in srgb,var(--color-action) 35%,transparent); }
+}
+@keyframes ui-shake {
+  25% { transform: translateX(-2px); }
+  70% { transform: translateX(2px); }
+}
+@keyframes ui-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

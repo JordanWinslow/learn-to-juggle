@@ -1,0 +1,115 @@
+@layer components {
+  .ui-note-slot {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .ui-stage-note {
+    --note-inset: calc(2 * var(--spacing));
+    position: absolute;
+    inset-inline-start: var(--note-inset);
+    pointer-events: auto;
+  }
+  .ui-stage-note[data-open="true"] {
+    inset-block-start: var(--note-inset);
+    inline-size: min(20rem, calc(100% - 2 * var(--note-inset)));
+    max-block-size: calc(100dvh - 2 * var(--spacing-hit) - 2 * var(--note-inset));
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--radius-surface);
+  }
+  .ui-stage-note[data-open="false"] { inset-block-end: var(--note-inset); }
+  .ui-note-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing) calc(2 * var(--spacing));
+    align-items: center;
+    min-inline-size: 0;
+    min-block-size: 0;
+    inline-size: 100%;
+    padding: calc(2 * var(--spacing)) calc(3 * var(--spacing));
+    border: 1px solid var(--color-control-edge);
+    border-radius: var(--radius-surface);
+    background: var(--color-panel);
+    box-shadow: 0 calc(2 * var(--spacing)) calc(5 * var(--spacing)) color-mix(in srgb, var(--color-ink) 55%, transparent);
+  }
+  .ui-note-actions { justify-content: flex-end; gap: var(--spacing); }
+  .ui-note-actions .ui-button { padding-inline: calc(2 * var(--spacing)); }
+  .ui-note-body { grid-column: 1 / -1; }
+  @media (max-height: 30rem) {
+    .ui-note-card:has(.ui-note-actions > :only-child) { grid-template-columns: minmax(0, 1fr) auto; }
+    .ui-note-card:has(.ui-note-actions > :only-child) .ui-note-actions { grid-area: 1 / 2; }
+  }
+  .ui-stage-note[data-open="false"] .ui-button { max-inline-size: 100%; }
+  .ui-stage-note[data-open="false"] .ui-status-mark { margin: 0; flex: none; }
+
+  .ui-lesson-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    padding: max(calc(3 * var(--spacing)), env(safe-area-inset-top)) max(calc(3 * var(--spacing)), env(safe-area-inset-right))
+             max(calc(3 * var(--spacing)), env(safe-area-inset-bottom)) max(calc(3 * var(--spacing)), env(safe-area-inset-left));
+    overflow: hidden;
+    color: var(--color-white);
+    background: transparent;
+  }
+  .ui-lesson-dialog[open] { display: grid; place-items: center; }
+  .ui-lesson-dialog::backdrop { background: color-mix(in srgb, var(--color-ink) 68%, transparent); }
+  .ui-dialog-content {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    inline-size: min(100%, 25rem);
+    max-block-size: 100%;
+    min-block-size: 0;
+  }
+  .ui-dialog-card.ui-feedback {
+    grid-template: auto minmax(0, 1fr) auto / minmax(0, 1fr);
+    justify-items: center;
+    gap: calc(3 * var(--spacing));
+    min-block-size: 0;
+    text-align: center;
+    padding: clamp(calc(3 * var(--spacing)), 4vh, calc(7 * var(--spacing)));
+  }
+  .ui-dialog-card .ui-status-mark { width: var(--spacing-hit); height: var(--spacing-hit); }
+  .ui-dialog-card .ui-feedback-copy {
+    min-height: 0;
+    max-height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    align-items: center;
+  }
+  .ui-dialog-card.ui-feedback > .ui-button { grid-column: 1; justify-self: center; }
+  .ui-dialog-card .ui-feedback-actions { grid-column: 1; justify-content: center; }
+  .ui-dialog-close { position: absolute; inset: var(--spacing) var(--spacing) auto auto; padding: 0; }
+  .ui-confetti { pointer-events: none; position: absolute; inset: 0; z-index: -1; }
+  .ui-confetti i {
+    position: absolute;
+    width: calc(2 * var(--spacing));
+    height: calc(3 * var(--spacing));
+    background: var(--color-turquoise);
+    animation: lesson-burst calc(5 * var(--duration-feedback)) cubic-bezier(.16,.7,.31,1) var(--burst-delay) both;
+  }
+  .ui-confetti i:nth-child(4n + 1) { background: var(--color-coral); }
+  .ui-confetti i:nth-child(4n + 2) { background: var(--color-amber); }
+  .ui-confetti i:nth-child(4n + 3) { background: var(--color-white); }
+  .ui-confetti i:nth-child(3n) { border-radius: 50%; height: calc(2 * var(--spacing)); }
+  @media (prefers-reduced-motion: reduce) {
+    .ui-confetti i {
+      animation: none;
+      transform: translate(calc(var(--burst-x) * .3), calc(var(--burst-y) * .3)) rotate(var(--burst-spin));
+    }
+  }
+}
+@keyframes lesson-burst {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  8% { opacity: 1; }
+  65% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--burst-x), var(--burst-y)) rotate(var(--burst-spin)); }
+}

@@ -1,0 +1,199 @@
+@layer components {
+  /* Notes and corrections float above this track. They never size the picture. */
+  .lesson-frame {
+    --lesson-gap: clamp(var(--spacing), 1.4dvh, calc(3 * var(--spacing)));
+    display: flex;
+    flex-direction: column;
+    gap: var(--lesson-gap);
+    inline-size: min(100%, 66rem);
+    block-size: 100dvh;
+    margin-inline: auto;
+    padding: var(--lesson-gap) var(--spacing-gutter);
+    padding-block-end: max(var(--lesson-gap), env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  .lesson-intro, .lesson-adjustments, .lesson-playback {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lesson-gap);
+  }
+  .lesson-intro { flex: 0 0 auto; max-block-size: 20dvh; overflow: auto; padding: var(--spacing); }
+  .lesson-intro .ui-view-switch { flex-shrink: 0; }
+  .lesson-workspace, .lesson-window {
+    position: relative;
+    min-block-size: 0;
+    min-inline-size: 0;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .lesson-window { padding: var(--lesson-gap); isolation: isolate; container: teaching-stage / size; }
+  /* A correction can extend across the stage edge on a short screen. */
+  .lesson-window:has(> .ui-stage-correction) { z-index: 1; }
+  .lesson-picture { flex: 1 1 0; min-block-size: 0; min-inline-size: 0; position: relative; }
+  .lesson-picture .sprite-scene { position: absolute; inset: 0; height: 100%; width: 100%; }
+
+  /* Reserve the corner even while the note is open so the coach stays in place. */
+  @container teaching-stage (max-width: 34rem) and (max-height: 26rem) {
+    .lesson-picture {
+      margin-block-start: calc(-1 * var(--lesson-gap));
+      margin-block-end: max(var(--spacing-hit), calc(10rem - 33cqh));
+    }
+    /* The 44px touch targets extend past the drawing on the shortest screens. */
+    .lesson-picture .sprite-scene { overflow: visible; }
+  }
+  @container teaching-stage (max-width: 34rem) and (max-height: 15rem) and (min-aspect-ratio: 1/1) {
+    /* Use the space beside the coach when there is too little room below. */
+    .lesson-picture {
+      margin-block: 0 calc(8 * var(--spacing));
+      margin-inline-start: calc(12 * var(--spacing));
+    }
+    .ui-stage-note[data-open="false"] .ui-button {
+      flex-direction: column;
+      inline-size: 5rem;
+      padding-inline: var(--spacing);
+      white-space: normal;
+    }
+    .lesson-workspace:has(.lesson-adjustments) .ui-stage-note[data-open="false"] .ui-button {
+      inline-size: 4.5rem; /* Leave room for the widest hand's touch target. */
+    }
+  }
+
+  .lesson-controls {
+    container: lesson-controls / inline-size;
+    display: grid;
+    align-content: start;
+    gap: var(--lesson-gap);
+    flex: 0 1 auto;
+    min-block-size: 0;
+    max-block-size: max(38%, calc(2 * var(--spacing-hit) + 3 * var(--lesson-gap) + 2 * var(--spacing)));
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: var(--lesson-gap) calc(2 * var(--spacing));
+    scroll-padding: calc(2 * var(--spacing));
+  }
+
+  .lesson-playback { flex-wrap: wrap; }
+  .lesson-playback > .ui-transport { flex: 1 1 15rem; }
+  .lesson-adjustments { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+  .lesson-adjustments > .ui-button { justify-self: end; }
+  @container lesson-controls (max-width: 25rem) {
+    .lesson-adjustments { gap: var(--spacing); }
+    .lesson-adjustments > .ui-button { padding-inline: calc(2 * var(--spacing)); }
+  }
+  @container lesson-controls (max-width: 17rem) {
+    .lesson-adjustments { grid-template-columns: minmax(0, 1fr); }
+    .ui-geometry-input { min-block-size: calc(2 * var(--spacing-hit) + var(--spacing)); }
+    .ui-geometry-input .ui-geometry { display: grid; }
+  }
+  .lesson-frame-picker .ui-range { flex: 1; min-width: 5rem; }
+  .lesson-advance { justify-content: flex-end; }
+  .lesson-frame[data-still-picture] :is(.ui-view-switch, [aria-label="Visible elements"]) { visibility: hidden; }
+  .lesson-cascade-count {
+    position: absolute;
+    inset: var(--spacing) var(--spacing) auto auto;
+    display: grid;
+    justify-items: center;
+    padding: var(--spacing) calc(2 * var(--spacing));
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-control);
+    background: var(--color-page);
+    font-variant-numeric: tabular-nums;
+  }
+  .lesson-controls:has(> .lesson-advance) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .lesson-controls:has(> .lesson-advance) .lesson-playback { display: contents; }
+  .lesson-controls > .lesson-advance { margin-inline-start: auto; }
+  @container lesson-controls (max-width: 35rem) {
+    .lesson-advance .ui-button { max-inline-size: 9.25rem; padding-inline: calc(2 * var(--spacing)); }
+    .lesson-advance .ui-stable-label { max-inline-size: 100%; }
+  }
+  @media (max-width: 26rem) {
+    .lesson-frame { padding-inline: calc(2 * var(--spacing)); }
+    .lesson-controls { padding-inline: var(--spacing); }
+  }
+  @media (min-width: 48rem) {
+    .lesson-workspace[data-controls-layout='sidebar'] { flex-direction: row; gap: var(--lesson-gap); }
+    .lesson-workspace[data-controls-layout='sidebar'] > .lesson-controls {
+      flex: 0 0 40%;
+      max-block-size: 100%;
+    }
+  }
+
+  /* In short, wide windows the controls rail leaves the full height for the throw. */
+  @media (min-width: 32rem) and (max-height: 30rem) and (min-aspect-ratio: 3/2) {
+    .lesson-workspace:has(.lesson-controls) { flex-direction: row; gap: var(--lesson-gap); }
+    .lesson-controls { flex: 0 0 clamp(12rem, 32%, 18rem); max-block-size: 100%; }
+    .lesson-playback > .ui-transport { flex-basis: 100%; }
+  }
+  /* Every guided step uses one centered stage and a floating cue. The grid
+     tracks stay in place when a learner dismisses or reopens the cue. */
+  .lesson-workspace[data-guided] {
+    display: grid;
+    grid-template: "stage" minmax(0, 1fr) "controls" auto / minmax(0, 1fr);
+  }
+  [data-guided] > .lesson-window, .lesson-guidance { grid-area: stage; }
+  [data-guided] > .lesson-controls { grid-area: controls; max-block-size: none; }
+  [data-guided] .lesson-picture { margin: 0; }
+  .lesson-guidance { position: relative; pointer-events: none; min-block-size: 0; min-inline-size: 0; }
+
+  /* Put both cue actions beside the heading on compact stages. The following
+     row uses the full card width for the coach's instructions. */
+  @media (max-width: 52rem), (max-height: 31rem) {
+    .lesson-guidance .ui-note-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: var(--spacing) calc(2 * var(--spacing));
+    }
+    .lesson-guidance .ui-note-actions { grid-area: 1 / 2; }
+    .lesson-guidance .ui-note-body { font-size: .9375rem; line-height: 1.32; }
+  }
+  @media (max-width: 52rem) and (min-height: 31rem) {
+    [data-guided] .lesson-picture { margin-block-end: min(10rem, 50cqh); }
+    .lesson-guidance .ui-stage-note[data-open="true"] {
+      inset-block: auto var(--note-inset);
+      inline-size: min(23rem, calc(100% - 2 * var(--note-inset)));
+    }
+    /* The cue and the animated hands occupy separate parts of the same stage. */
+    [data-guided]:has(.lesson-advance) { --cue-height: min(11rem, 61cqh); }
+    [data-guided]:has(.lesson-advance) .lesson-picture { margin-block-end: var(--cue-height); }
+    [data-guided]:has(.lesson-advance) .lesson-guidance { container-type: size; }
+    [data-guided]:has(.lesson-advance) .ui-stage-note[data-open="true"] { max-block-size: var(--cue-height); }
+  }
+  @media (max-height: 30.99rem) {
+    .lesson-workspace[data-guided] {
+      grid-template: "stage note" minmax(0, 1fr) "controls controls" auto / minmax(0, 1fr) minmax(14rem, 50%);
+      column-gap: var(--lesson-gap);
+    }
+    [data-guided] > .lesson-guidance { grid-area: note; }
+    [data-guided] > .lesson-controls { padding-block: 0; }
+    .lesson-guidance .ui-stage-note { --note-inset: 0px; }
+    .lesson-guidance .ui-stage-note[data-open="true"] { inline-size: 100%; max-block-size: 100%; }
+    [data-guided] .lesson-controls .lesson-playback > .ui-transport { flex-basis: 10rem; }
+  }
+
+  @media (max-width: 30rem) and (max-height: 30.99rem) {
+    .lesson-frame:has([data-guided]) { --lesson-gap: var(--spacing); }
+    .lesson-frame:has([data-guided]) .lesson-intro { padding-block: 0; }
+    .lesson-workspace[data-guided] {
+      grid-template: "stage controls" minmax(calc(3 * var(--spacing-hit)), 1fr) "note note" minmax(0, 8.5rem) / minmax(0, 1fr) 55%;
+      row-gap: var(--lesson-gap);
+    }
+    [data-guided] .lesson-controls { display: grid; align-content: start; justify-content: stretch; gap: 0; }
+    [data-guided] .lesson-controls .lesson-advance { justify-self: end; }
+    .lesson-guidance .ui-stage-note[data-open="true"] { inset-block: auto 0; }
+    .lesson-guidance .ui-note-card { padding-block: 0; row-gap: 0; }
+    [data-guided]:has(.lesson-advance) {
+      grid-template-rows: minmax(6rem, 1fr) min(57%, 9.5rem);
+    }
+    [data-guided]:has(.ui-stage-note[data-open='true']) .lesson-advance:has(button:disabled) { display: none; }
+    [data-guided]:has(.lesson-advance):has(.ui-stage-note[data-open='false']) > .lesson-controls {
+      grid-row: 1 / -1;
+      align-self: start;
+    }
+  }
+
+}

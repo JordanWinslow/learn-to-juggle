@@ -1,0 +1,79 @@
+@reference "../ui/theme.css";
+
+@layer components {
+  .welcome-screen {
+    --welcome-gap: clamp(var(--spacing), 1.4dvh, calc(3 * var(--spacing)));
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--welcome-gap);
+    max-inline-size: 66rem;
+    block-size: 100dvh;
+    margin-inline: auto;
+    padding: var(--welcome-gap) var(--spacing-gutter) max(var(--spacing-gutter), env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  .welcome-header { display: flex; border-bottom: 1px solid var(--color-divider); }
+  .welcome-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--spacing-gutter);
+    min-height: 0;
+    align-self: center;
+    height: min(100%, 32rem);
+  }
+  .welcome-flow { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-width: 0; min-height: 0; }
+  .welcome-reading {
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: calc(2 * var(--spacing));
+  }
+  .welcome-actions { padding: calc(2 * var(--spacing)); }
+  .welcome-actions > .ui-button:only-child { inline-size: min(100%, 13rem); }
+  .welcome-coach {
+    position: relative;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    background: var(--color-stage);
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-surface);
+    overflow: hidden;
+  }
+  .welcome-coach .sprite-scene { width: 100%; height: 100%; }
+  .welcome-coach figcaption { @apply flex items-center justify-between gap-2 px-3 py-1; }
+  .welcome-portrait img { object-fit: contain; image-rendering: pixelated; }
+  .welcome-details { width: 100%; border-block: 1px solid var(--color-divider); }
+  .welcome-details details + details { border-top: 1px solid var(--color-divider); }
+  .welcome-details summary { @apply min-h-hit cursor-pointer py-3 text-label; }
+  .welcome-details details[open] { padding-bottom: calc(3 * var(--spacing)); }
+  .welcome-sources { @apply flex flex-wrap gap-2; }
+  .welcome-sources a, .welcome-source { @apply text-label text-turquoise underline underline-offset-4; }
+  .welcome-form { width: min(100%, 22rem); }
+  .welcome-resume { border-inline-start: 3px solid var(--color-amber); padding-inline-start: calc(3 * var(--spacing)); }
+  .welcome-resume > p + p { margin-block-start: var(--spacing); }
+  .welcome-share { display: inline-flex; }
+  .welcome-share-link {
+    @apply fixed z-10 grid gap-2 border border-control-edge bg-panel;
+    inset-inline: 0;
+    bottom: calc(var(--spacing-hit) + var(--spacing-gutter));
+    width: min(calc(100% - var(--spacing-gutter)), 24rem);
+    margin-inline: auto;
+  }
+  @media (max-width: 42rem) and (orientation: portrait) {
+    .welcome-screen { padding-inline: calc(2 * var(--spacing)); padding-block-end: max(var(--welcome-gap), env(safe-area-inset-bottom)); }
+    .welcome-body {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: clamp(6rem, 23dvh, 12rem) minmax(0, 1fr);
+      height: 100%;
+      gap: var(--welcome-gap);
+    }
+    .welcome-coach { grid-row: 1; }
+    .welcome-coach figcaption { grid-area: 1 / 1; align-self: end; }
+    .welcome-coach figcaption .ui-caption { max-inline-size: 5rem; }
+    .welcome-coach .sprite-scene { grid-area: 1 / 1; }
+  }
+}

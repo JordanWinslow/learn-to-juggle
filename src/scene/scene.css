@@ -1,0 +1,140 @@
+@layer components {
+  .grip-hotspot { cursor: pointer; }
+  .grip-ring { fill: none; stroke: var(--color-white); stroke-width: 1; }
+  .grip-error { stroke: var(--color-error); }
+  /* Standalone specimens use a bounded stage. Inside a lesson, the available
+     picture track supplies the height, including in a short landscape window. */
+  .sprite-scene {
+    display: block;
+    width: 100%;
+    height: clamp(15rem, 47vh, 27rem);
+    background: var(--color-stage);
+    color: var(--color-white);
+    image-rendering: pixelated;
+  }
+}
+.sprite-body-faded { opacity: .35; }
+/* Chromium resolves touch panning at the outer SVG, before a handle can
+   capture the rest of a drag. Keep two-finger zoom available on the stage. */
+.sprite-scene[role='group'] { touch-action: pinch-zoom; }
+.sprite-path {
+  fill: var(--color-turquoise);
+  stroke: var(--color-ink);
+  stroke-width: .85;
+}
+.sprite-handle {
+  touch-action: none;
+  user-select: none;
+  outline: none;
+  --handle-edge: var(--color-turquoise);
+  --handle-fill: var(--color-ink);
+}
+.sprite-handle[data-axis="vertical"] { cursor: ns-resize; }
+.sprite-handle[data-axis="horizontal"] { cursor: ew-resize; }
+.sprite-hit { fill: transparent; pointer-events: all; }
+.sprite-button-surface {
+  fill: var(--handle-fill);
+  stroke: var(--handle-edge);
+  stroke-width: 2;
+  pointer-events: none;
+}
+.sprite-hub { fill: var(--handle-edge); pointer-events: none; }
+.sprite-handle[data-axis="vertical"] .sprite-button-surface {
+  fill: color-mix(in srgb, var(--handle-fill) 45%, transparent);
+}
+.sprite-grip, .sprite-tether {
+  fill: none;
+  stroke: var(--handle-edge);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.sprite-arrows {
+  fill: none;
+  stroke: var(--handle-edge);
+  stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 1px 1px var(--color-ink));
+  pointer-events: none;
+}
+.sprite-handle-focus {
+  visibility: hidden;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--color-focus);
+  stroke-width: var(--outline-width-focus);
+  filter: drop-shadow(0 0 1.5px var(--color-focus-keyline));
+}
+@media (hover: hover) {
+  .sprite-handle:hover:not(:focus-visible, [data-dragging]) .sprite-handle-focus {
+    visibility: visible;
+    stroke: var(--color-interaction-edge);
+    stroke-width: 2;
+  }
+}
+.sprite-handle:focus-visible .sprite-handle-focus,
+.sprite-handle[data-dragging] .sprite-handle-focus { visibility: visible; }
+.sprite-handle:focus-visible, .sprite-handle:hover {
+  --handle-edge: var(--color-white);
+  --handle-fill: var(--color-control-hover);
+}
+.sprite-handle[data-dragging] {
+  --handle-edge: var(--color-ink);
+  --handle-fill: var(--color-control-pressed);
+}
+.sprite-handle[data-dragging] .sprite-button-surface { fill: var(--handle-fill); }
+.sprite-handle[data-axis="vertical"][data-dragging] .sprite-arrows { stroke: var(--color-focus); }
+@media (prefers-reduced-motion: no-preference) {
+  .sprite-handle:not(:hover, :focus-visible, [data-dragging]) .sprite-arrows {
+    animation: sprite-arrows-pulse var(--duration-attention) ease-in-out infinite;
+  }
+}
+@keyframes sprite-arrows-pulse {
+  0%, 100% { opacity: .65; }
+  50% { opacity: 1; }
+}
+@media (forced-colors: active) {
+  .sprite-handle { --handle-edge: ButtonText; --handle-fill: ButtonFace; }
+  .sprite-handle-focus { stroke: Highlight; filter: none; }
+  .sprite-handle:focus-visible, .sprite-handle:hover, .sprite-handle[data-dragging] {
+    --handle-edge: Highlight; --handle-fill: Canvas;
+  }
+}
+.sprite-callout { color: var(--color-white); pointer-events: none; }
+.sprite-callout :is(path, circle, ellipse) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 1px var(--color-ink));
+}
+.sprite-callout text, .sprite-fallback {
+  fill: currentColor;
+  font: var(--text-label--font-weight) var(--text-sprite-caption) var(--font-sans);
+  paint-order: stroke;
+  stroke: var(--color-stage);
+  stroke-width: 2px;
+}
+.sprite-callout text { font-size: var(--text-caption); }
+.sprite-correction {
+  pointer-events: none;
+  fill: none;
+  stroke: var(--color-error);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 1px 1px var(--color-ink));
+}
+.sprite-correction > * { vector-effect: non-scaling-stroke; }
+.sprite-correction [data-correction-anchor] { fill: transparent; stroke: none; }
+@media (forced-colors: active) {
+  .sprite-correction { stroke: Highlight; filter: none; }
+}
+
+.sprite-encounter {
+  pointer-events: none;
+  fill: none;
+  stroke: var(--color-turquoise);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 1px var(--color-ink));
+}
+.sprite-encounter[data-encounter="contact"] { stroke: var(--color-error); }

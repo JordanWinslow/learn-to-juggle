@@ -1,0 +1,49 @@
+@layer components {
+  .ui-stage-correction {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ui-correction-leader { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .ui-correction-leader line {
+    stroke: var(--color-error);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 1px 1px var(--color-ink));
+  }
+  .ui-correction-position {
+    position: absolute;
+    inset: 0 auto auto 0;
+    inline-size: min(20rem, calc(100% - 4 * var(--spacing)));
+    transform: translate(calc(2 * var(--spacing)), calc(2 * var(--spacing)));
+    pointer-events: auto;
+  }
+  .ui-correction-position::after {
+    content: "";
+    position: absolute;
+    left: var(--join-x);
+    top: var(--join-y);
+    width: calc(1.5 * var(--spacing));
+    height: calc(1.5 * var(--spacing));
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--color-error);
+    pointer-events: none;
+  }
+  .ui-correction-card.ui-feedback {
+    grid-template: auto auto / auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--spacing) calc(2 * var(--spacing));
+    padding: calc(2 * var(--spacing)) calc(3 * var(--spacing));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-ink) 42%, transparent);
+  }
+  .ui-correction-card .ui-feedback-copy { display: contents; }
+  .ui-correction-card .ui-status-mark { grid-area: 1 / 1; margin: 0; }
+  .ui-correction-card .ui-heading { grid-area: 1 / 2; }
+  .ui-correction-card .ui-text { grid-area: 2 / 1 / 3 / -1; }
+  .ui-correction-card.ui-feedback > .ui-button { grid-area: 1 / 3; padding-inline: calc(2 * var(--spacing)); }
+  @media (forced-colors: active) {
+    .ui-correction-leader line { stroke: Highlight; filter: none; }
+  }
+}

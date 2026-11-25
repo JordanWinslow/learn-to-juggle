@@ -1,0 +1,16 @@
+@import "../src/ui/theme.css";
+@source ".";
+
+@layer components {
+  .ui-specimen { @apply mx-auto max-w-4xl p-gutter; }
+  .ui-swatch-grid { @apply grid gap-3; grid-template-columns: repeat(auto-fit,minmax(min(12rem,100%),1fr)); }
+  .ui-swatch { @apply flex flex-col gap-1 rounded-control border border-divider p-3; }
+  .ui-swatch-chip { @apply block h-5 rounded-sm; }
+  .ui-type-scale { @apply grid divide-y divide-divider; }
+  .ui-type-row { @apply grid gap-2 py-3; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+  .ui-type-row dt { @apply flex flex-col; }
+  .ui-type-row dd { @apply min-w-0 self-center; }
+  @media (max-width: 32rem) {
+    .ui-type-row { grid-template-columns: 1fr; }
+  }
+}

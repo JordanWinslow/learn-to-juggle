@@ -1,0 +1,104 @@
+@layer components {
+  :root { --course-nav-height: var(--spacing-hit); }
+  .course-player {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: 100dvh;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .course-content { min-block-size: 0; min-inline-size: 0; }
+  .course-player .lesson-frame { block-size: 100%; }
+  .course-step-heading { min-inline-size: 0; }
+  .course-step-heading h1[tabindex="-1"]:focus { outline: none; }
+  .course-step-heading .ui-caption { display: block; }
+  .course-step-heading .ui-caption strong { color: var(--color-turquoise); }
+  .course-dock-slot { block-size: calc(var(--course-nav-height) + env(safe-area-inset-bottom)); }
+  .ui-dialog-footer-slot { position: fixed; inset: auto 0 0; z-index: 1; }
+  .ui-lesson-dialog:has(.ui-dialog-footer-slot) {
+    grid-template-rows: minmax(0, 1fr);
+    padding-block-end: calc(var(--course-nav-height) + env(safe-area-inset-bottom) + 2 * var(--spacing));
+  }
+  .course-navigation {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template: "home position phases back" var(--spacing-hit) / 5rem 13rem minmax(0, max-content) 4.5rem;
+    justify-content: center;
+    align-items: center;
+    column-gap: calc(2 * var(--spacing));
+    padding-block-end: env(safe-area-inset-bottom);
+    background: var(--color-page);
+    box-shadow: 0 -1px var(--color-divider);
+  }
+  .course-navigation > .ui-course-logo { grid-area: home; }
+  .course-navigation > .ui-dock { grid-area: phases; margin-inline: 0; }
+  .course-position { grid-area: position; display: grid; justify-content: start; }
+  .course-position > :first-child { color: var(--color-white); }
+  .course-position strong { color: var(--color-amber); }
+  .course-navigation .course-back {
+    grid-area: back;
+    border: 0;
+    border-radius: var(--radius-control);
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: .22em;
+    gap: var(--spacing);
+    padding-inline: calc(2 * var(--spacing));
+  }
+  .course-back:is(:hover, :focus-visible) { text-decoration-thickness: .15em; }
+  .course-lesson-picker {
+    position: absolute;
+    z-index: 1;
+    inset-block-end: calc(100% + var(--spacing));
+    inset-inline: 0;
+    margin-inline: auto;
+    inline-size: min(calc(100% - 4 * var(--spacing)), 22rem);
+    max-block-size: calc(100dvh - var(--course-nav-height) - env(safe-area-inset-bottom) - 4 * var(--spacing));
+    overflow: auto;
+    display: grid;
+    gap: var(--spacing);
+    padding: calc(2 * var(--spacing));
+    background: var(--color-panel);
+    border: 1px solid var(--color-control-edge);
+    box-shadow: 0 var(--spacing) calc(4 * var(--spacing)) var(--color-ink);
+  }
+  .course-lesson-picker > .ui-label { padding-inline: calc(2 * var(--spacing)); }
+  .course-lesson-picker .ui-button {
+    display: grid;
+    grid-template-columns: 6.25rem minmax(0, 1fr);
+    align-items: baseline;
+    align-content: center;
+    text-align: start;
+    padding-inline: calc(2 * var(--spacing));
+  }
+  .course-lesson-picker .ui-button[aria-current] {
+    border-color: var(--color-amber);
+  }
+  .course-current-step { display: block; color: var(--color-amber); }
+  .course-lesson-picker .ui-button:is(:hover, :active, :focus-visible) .ui-caption {
+    color: inherit;
+  }
+  @media (max-width: 42rem) {
+    :root { --course-nav-height: calc(2 * var(--spacing-hit)); }
+    .course-navigation {
+      grid-template: "home position back" var(--spacing-hit) "phases phases phases" var(--spacing-hit) / 3rem minmax(0, 15rem) 3rem;
+      column-gap: var(--spacing);
+      padding-inline: var(--spacing);
+    }
+    .course-navigation > .ui-course-logo { flex-direction: column; gap: 0; font-size: var(--text-caption); }
+    .course-navigation > .ui-course-logo svg { width: 24px; height: 24px; }
+    .course-position { justify-content: center; text-align: center; }
+    .course-navigation > .ui-dock { justify-self: center; }
+    .course-navigation .course-back { gap: 0; padding-inline: 0; }
+    .course-navigation .ui-dock-preview { inset-block-end: calc(100% + var(--spacing-hit) + var(--spacing)); }
+  }
+  @media (min-width: 35.5rem) and (max-width: 42rem) {
+    :root { --course-nav-height: var(--spacing-hit); }
+    .course-navigation {
+      grid-template: "home position phases back" var(--spacing-hit) / var(--spacing-hit) minmax(0, 13rem) max-content 3rem;
+      column-gap: var(--spacing);
+    }
+    .course-navigation .ui-dock-preview { inset-block-end: calc(100% + var(--spacing)); }
+  }
+}
